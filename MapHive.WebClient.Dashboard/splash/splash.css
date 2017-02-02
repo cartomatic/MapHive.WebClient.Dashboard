@@ -1,0 +1,125 @@
+﻿HTML { height: 100%; }
+#splash-screen-container
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+}
+#splash-screen-mask
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: #ccc;
+
+    -moz-opacity: 0.5;
+    opacity: .50;
+    filter: alpha(opacity=50);
+}
+
+#load-info-container
+{
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -100px;
+    //background-color: white;
+    //border: 1px solid gray;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+    font-variant: normal;
+    text-align: center;
+}
+
+/*http://cssload.net/en/spinners*/
+.cssload-whirlpool,
+.cssload-whirlpool::before,
+.cssload-whirlpool::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgb(255,204,0);
+    border-left-color: rgb(0,0,0);
+    border-radius: 999px;
+    -o-border-radius: 999px;
+    -ms-border-radius: 999px;
+    -webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+}
+
+.cssload-whirlpool {
+    margin: -32px 0 0 -32px;
+    height: 64px;
+    width: 64px;
+    animation: cssload-rotate 2350ms linear infinite;
+    -o-animation: cssload-rotate 2350ms linear infinite;
+    -ms-animation: cssload-rotate 2350ms linear infinite;
+    -webkit-animation: cssload-rotate 2350ms linear infinite;
+    -moz-animation: cssload-rotate 2350ms linear infinite;
+}
+
+.cssload-whirlpool::before {
+    content: "";
+    margin: -30px 0 0 -30px;
+    height: 58px;
+    width: 58px;
+    animation: cssload-rotate 2350ms linear infinite;
+    -o-animation: cssload-rotate 2350ms linear infinite;
+    -ms-animation: cssload-rotate 2350ms linear infinite;
+    -webkit-animation: cssload-rotate 2350ms linear infinite;
+    -moz-animation: cssload-rotate 2350ms linear infinite;
+}
+
+.cssload-whirlpool::after {
+    content: "";
+    margin: -36px 0 0 -36px;
+    height: 70px;
+    width: 70px;
+    animation: cssload-rotate 4700ms linear infinite;
+    -o-animation: cssload-rotate 4700ms linear infinite;
+    -ms-animation: cssload-rotate 4700ms linear infinite;
+    -webkit-animation: cssload-rotate 4700ms linear infinite;
+    -moz-animation: cssload-rotate 4700ms linear infinite;
+}
+
+
+
+@keyframes cssload-rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes cssload-rotate {
+    100% {
+        -o-transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes cssload-rotate {
+    100% {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-rotate {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes cssload-rotate {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
