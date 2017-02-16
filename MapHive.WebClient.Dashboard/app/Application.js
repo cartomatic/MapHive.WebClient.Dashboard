@@ -62,16 +62,6 @@
             //start the external route watcher - this will watch changes advised by a parent, and pass own changes to a parent
             this.fireGlobal('root::watchexternalroutes', {host: true});
 
-
-            //finally force reroute to the specified route so the router kicks in and handles nav properly
-            //make sure though to postpone this a bit, so all the other stuff that can still be potentially configuring has some time to finish
-            Ext.defer(
-                function(){
-                    this.redirectTo(window.location.hash.replace('#', ''), true);
-                },
-                250,
-                this
-            );
         }
 
     });
