@@ -27,6 +27,8 @@
             //default auth
             'mh.controller.Auth',
 
+            'mh.controller.Organisation',
+
             //default splash
             'mh.controller.Splash'
         ],
@@ -36,8 +38,11 @@
 
         /**
          * internal app launch procedure
+         * @param cfg
+         * @param cfg.userConfig
+         * @param cfg.orgCtx
          */
-        internalAppLaunch: function(userCfg){
+        internalAppLaunch: function(cfg){
 
             //suppress aria warnings!
             Ext.ariaWarn = Ext.emptyFn;
@@ -48,9 +53,9 @@
 
             //TODO - make sure the app can start - permissions and such...
 
-
             //first make sure the base does what's required! This will trigger the configured UI creation (AppLauncher)
             this.callMeParent('internalAppLaunch', arguments);
+
 
             //Now the post-launch setup
 

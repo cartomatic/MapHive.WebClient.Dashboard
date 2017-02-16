@@ -15,7 +15,8 @@
             'mh.mixin.CallMeParent',
             'mh.mixin.Localisation',
             'mh.mixin.UrlUtils',
-            'mh.mixin.UserCfg'
+            'mh.mixin.UserCfg',
+            'mh.communication.MsgBus'
         ],
 
         requires: [
@@ -26,6 +27,16 @@
         init: function(){
             this.callMeParent('init', arguments);
 
+            this.watchGlobal('org::changed', this.printInfo, this);
+
+            //this will obtain the intial org info, as the changed evt may have already fired
+            this.watchGlobal('org::context', function(orgCtx){
+                this.printInfo(orgCtx.currentOrg);
+            }, this, {single: true});
+            this.fireGlobal('org::getcontext');
+        },
+
+        printInfo: function(org){
             var user = this.getCurrentUser();
 
             //inject some stuff to the body for the time being so it looks like something is dynamic...
@@ -34,14 +45,14 @@
                 '<br/>This app requires authentication so whenever the app starts the user must be known.' +
                 '<br>Org\'s Dashboard will work in a few "modes":' +
                 '<ul>' +
-                    '<li>When no organisation context is known it will display a user\'s org dashboard</li>' +
-                    '<li>When no organisation context is known and user has access to more than 1 org, some sort of overview / org picker will be presented</li>' +
-                    '<li>When org context is known, the app will display organisation\' dashboard</li>' +
+                '<li>When no organisation context is known it will display a user\'s org dashboard</li>' +
+                '<li>When no organisation context is known and user has access to more than 1 org, some sort of overview / org picker will be presented</li>' +
+                '<li>When org context is known, the app will display organisation\' dashboard</li>' +
                 '</ul>' +
                 '<br/>' +
                 'Currently authenticated user is: <b>' + user.email + ' (' + user.uuid + ')</b>' +
-                '<br/>Current organisations scope detected in URL is: <b>' + (this.getUrlOrgIdentifier() || 'UNDEFINED') + '</b>' +
-                '<br/>Note: org context as picked from URL needs verification as obviously it may be changed by hand'
+
+                '<br/>Current organisations scope is: <b>' + org.get('displayName') + ' (' + org.get('slug') + ')</b>'
             );
         }
     });
