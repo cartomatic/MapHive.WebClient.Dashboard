@@ -1,15 +1,17 @@
-//Disable some of the JSLint warnings
-/*global window,console,Ext*/
 (function(){
     //Make sure strict mode is on
     'use strict';
-
+    
     /**
-     *
+     * Created by domin on 21.02.2017.
      */
-    Ext.define('Dashboard.view.main.MainController', {
+    Ext.define('Dashboard.view.dashboard.DashboardController', {
         extend: 'Ext.app.ViewController',
-        alias: 'controller.viewport',
+        alias: 'controller.dboard',
+
+        requires: [
+            'Dashboard.view.dashboard.DashboardLocalisation'
+        ],
 
         mixins: [
             'mh.mixin.CallMeParent',
@@ -19,13 +21,13 @@
             'mh.communication.MsgBus'
         ],
 
-        requires: [
-            'Ext.panel.Panel',
-            'Dashboard.view.main.MainLocalisation'
-        ],
-
-        init: function(){
+        /**
+         * Called when the view is created
+         */
+        init: function() {
             this.callMeParent('init', arguments);
+
+            this.injectLocalisationToViewModel();
 
             this.watchGlobal('org::changed', this.printInfo, this);
 
@@ -56,5 +58,6 @@
             );
         }
     });
-
+    
 }());
+    

@@ -8,17 +8,16 @@
      * App's viewport
      */
     Ext.define('Dashboard.view.main.Main', {
-        extend: 'Ext.panel.Panel',
+        extend: 'mh.module.sideNav.SideNav',
 
         requires: [
+            'Dashboard.view.main.MainController',
             'Ext.plugin.Viewport'
         ],
 
         plugins: 'viewport',
 
-        controller: 'viewport',
-
-        bodyPadding: 20
+        controller: 'viewport'
     });
 
 }());

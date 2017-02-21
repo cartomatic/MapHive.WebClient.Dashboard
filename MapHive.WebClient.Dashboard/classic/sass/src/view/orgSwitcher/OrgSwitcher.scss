@@ -1,0 +1,10 @@
+@include extjs-button-large-ui(
+  $ui: 'orgswitcher-button',
+  $border-color: #37393e,
+  $border-color-focus: #37393e,
+  $border-color-focus-pressed: #37393e,
+  $background-color: #37393e,
+  $color: #0067C0,
+  $font-weight: bold,
+  $arrow-glyph-color: #0067C0
+);

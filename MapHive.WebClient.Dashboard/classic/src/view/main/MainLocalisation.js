@@ -10,7 +10,18 @@
         ],
         statics: {
             localisation: {
-
+                dashboard: {
+                    en: 'Dashboard',
+                    pl: 'Dashboard'
+                },
+                people: {
+                    en: 'People',
+                    pl: 'Użytkownicy'
+                },
+                organisation_settings: {
+                    en: 'Organisation settigs',
+                    pl: 'Ustawienia organizacji'
+                }
             }
         }
     }, function(){
