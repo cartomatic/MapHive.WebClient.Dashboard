@@ -38,7 +38,7 @@
                 xtype: 'teams',
                 reference: 'teams',
                 bind: {
-                    title: '{localisation.users}'
+                    title: '{localisation.teams}'
                 },
                 iconCls: 'x-li li-group-work'
             }

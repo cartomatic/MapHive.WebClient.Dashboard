@@ -45,12 +45,8 @@
             this.getView().setHtml(
                 'This is a <b>DASHBOARD</b> app. It kicks automatically in when the ORGANIZATION context is known, but the APP is not specified.' +
                 '<br/>This app requires authentication so whenever the app starts the user must be known.' +
-                '<br>Org\'s Dashboard will work in a few "modes":' +
-                '<ul>' +
-                '<li>When no organisation context is known it will display a user\'s org dashboard</li>' +
-                '<li>When no organisation context is known and user has access to more than 1 org, some sort of overview / org picker will be presented</li>' +
-                '<li>When org context is known, the app will display organisation\' dashboard</li>' +
-                '</ul>' +
+                '<br>Dashboard view will show some information that is relevant to a user within a current organisation' +
+
                 '<br/>' +
                 'Currently authenticated user is: <b>' + user.email + ' (' + user.uuid + ')</b>' +
 
