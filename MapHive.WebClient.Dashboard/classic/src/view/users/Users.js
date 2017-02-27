@@ -1,24 +1,53 @@
+//Disable some of the JSLint warnings
+/*global window,console,Ext*/
 (function(){
     //Make sure strict mode is on
     'use strict';
-    
-    /**
-     * Created by domin on 21.02.2017.
-     */
-    Ext.define('Dashboard.view.users.Users', {
-        extend: 'Ext.panel.Panel',
-    
-        xtype: 'users',
 
-        items: [
-            /* include child components here */
+    Ext.define('Dashboard.view.users.Users', {
+        extend: 'mh.module.dataView.DataViewBase',
+
+        requires: [
+            'Ext.grid.Panel',
+            'Ext.grid.filters.Filters',
+            'Dashboard.view.users.DataViewForm',
+            'Dashboard.view.users.UsersController',
+            'Dashboard.view.users.UsersModel'
         ],
 
-        bodyPadding: 20,
+        xtype: 'users',
 
-        html: 'This is gonna be users view'
+        viewModel: {
+            type: 'users'
+        },
+    
+        controller: 'users',
+
+        hideGridHeader: true,
+        hideFormHeader: true,
+        autoLoad: false,
+
+        grid: {
+            xtype: 'grid',
+            border: false,
+            plugins: 'gridfilters',
+            bind: {store: '{gridstore}'},
+            columns: [
+                {
+                    bind: {text: '{localisation.email}'},
+                    dataIndex: 'email',
+                    flex: 1,
+                    filter: {
+                        // required configs
+                        type: 'string'
+                    }
+                }
+            ]
+        },
+        gridIconCls: 'x-li li-users2',
+        form: 'Dashboard.view.users.DataViewForm',
+        //formWidth: 300,
+        editForm: false
     });
-    
-}());
 
-    
+}());

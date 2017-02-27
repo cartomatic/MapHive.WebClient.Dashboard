@@ -63,7 +63,6 @@
          * @param view
          */
         onViewKickIn: function(subView){
-
             var view = this.lookupReference(subView);
             if(!view){
                 view = this.getView().items.items[0];
@@ -71,6 +70,8 @@
 
             if(view){
                 this.getView().getLayout().setActiveItem(view);
+                //make the view reload its grid
+
             }
             else {
                 //okey dokey, this is an unmatched route after all, so redirect to a default route

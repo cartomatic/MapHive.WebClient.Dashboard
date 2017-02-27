@@ -15,7 +15,8 @@
         'Dashboard.view.people.PeopleModel',
         'Dashboard.view.teams.Teams',
         'Dashboard.view.users.Users',
-        'Ext.layout.container.Fit'
+        'Ext.layout.container.Fit',
+        'Ext.panel.Panel'
     ],
 
     controller: 'people',
@@ -26,12 +27,24 @@
         header: false,
 
         items: [
+            // {
+            //     xtype: 'panel',
+            //     reference: 'users',
+            //     bind: {
+            //         title: '{localisation.users}'
+            //     },
+            //     iconCls: 'x-li li-users2',
+            //     layout: 'fit',
+            //     items: [
+            //         {
+            //             xtype: 'users'
+            //         }
+            //     ]
+            // },
             {
                 xtype: 'users',
                 reference: 'users',
-                bind: {
-                    title: '{localisation.users}'
-                },
+                title: 'whooaaaa',
                 iconCls: 'x-li li-users2'
             },
             {
