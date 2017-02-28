@@ -5,18 +5,19 @@
     'use strict';
 
     Ext.define('Dashboard.view.users.UsersController', {
-        extend: 'mh.module.dataView.DataViewBaseController',
+        extend: 'mh.module.dataView.users.UsersController',
         alias: 'controller.users',
 
-        requires: [
-            'Dashboard.view.users.UsersLocalisation'
-        ],
+    requires: [
+        'Dashboard.view.users.UsersLocalisation',
+        'Ext.button.Split',
+        'mh.module.dataView.LinksPicker'
+    ],
 
-        mixins: [
+    mixins: [
             'mh.mixin.Localisation',
             'mh.mixin.CallMeParent',
-            'mh.mixin.GridUtils',
-            'mh.mixin.ApiMap'
+            'Dashboard.mixin.DataViewOrgCtxUtils'
         ],
 
         /**
@@ -25,89 +26,89 @@
         init: function() {
             this.callMeParent('init', arguments);
 
+            //inject extra user add tools
+            this.createAddUserUi();
+
             this.setUpOrgContextHandlers();
         },
 
         /**
-         * sets up org context related functionality, so a view can adjust its content based on the scoped organisation
+         * creates UI for adding users to an organisation
          */
-        setUpOrgContextHandlers: function(){
-            //observing layout evts is the way to know when this comp has been shown
-            this.getView().on('activate', this.onViewShow, this);
-            this.getView().on('deactivate', this.onViewHide, this);
-
-            this.watchGlobal('org::changed', this.onOrgChanged, this);
+        createAddUserUi: function(){
+            this.lookupReference('gridTbar').add(
+                Ext.create('Ext.button.Split', {
+                    text: this.getTranslation('btnAddUser'),
+                    iconCls: 'x-li li-user-plus',
+                    menuAlign: 'tr-br?',
+                    arrowVisible: false,
+                    menu: {
+                        items: [
+                            {
+                                text: this.getTranslation('btnAddNewOrgUser'),
+                                iconCls: 'x-li li-user-plus',
+                                listeners: {
+                                    click: 'onAddNewOrgUser'
+                                }
+                            },
+                            {
+                                text: this.getTranslation('btnAddUserFromCatalogue'),
+                                iconCls: 'x-li li-users',
+                                listeners: {
+                                    click: 'onAddUserFromCatalogue'
+                                }
+                            }
+                        ]
+                    },
+                    listeners: {
+                        click: function(btn){
+                            btn.showMenu();
+                        }
+                    }
+                })
+            );
         },
 
         /**
-         * whether or not the component is visible;
-         * IMPORTANT - must be able to observe its own activate / deactivate events! levels of nesting do have importance!
+         * initiates a procedure of adding a new organisation user
+         * @param btn
          */
-        visible: false,
-
-        /**
-         * view deactivate callback; just flags self internally as hidden
-         */
-        onViewHide: function(){
-            this.visible = false;
+        onAddNewOrgUser: function(btn){
+            //just a new user, so a simple user details input should do
         },
 
         /**
-         * timeout identifier for the internal view show callback
+         * @private {mh.module.dataView.LinksPicker} userLinksPicker
          */
-        internalViewShowScheduler: null,
+        userLinksPicker: null,
 
         /**
-         * afterlayout callback handler; triggers store reloads and such
+         * initiates adding a user from a catalogue
+         * @param btn
          */
-        onViewShow: function(){
-            this.visible = true;
+        onAddUserFromCatalogue: function(btn){
+            //need to display a window with a standard users links picker.
+            if(!this.userLinksPicker){
+                this.userLinksPicker = Ext.create('mh.module.dataView.users.Catalogue', {
+                    animateTarget: btn
+                });
 
-            //get the org, work out the store url and update store's proxy
-            var tunnel = this.getTunnelId();
-            this.watchGlobal('org::context', this.orgCtxRetrieved, this, {single: true, tunnel: tunnel});
-            this.fireGlobal('org::getcontext', null, {tunnel: tunnel});
-        },
-
-        /**
-         * org changed callback
-         * @param org
-         */
-        onOrgChanged: function(org){
-            this.reloadStore(org);
-        },
-
-        /**
-         * tunnelled org::getcontext callback
-         * @param orgCtx
-         */
-        orgCtxRetrieved: function(orgCtx){
-            this.reloadStore(orgCtx.currentOrg);
-        },
-
-        /**
-         * last store url used to load the data
-         */
-        lastDataUrl: null,
-
-        /**
-         * reloads the store for given org
-         * @param org
-         */
-        reloadStore: function(org){
-
-            if(!this.visible){
-                return;
+                //need to get the data, huh?
+                this.userLinksPicker.on('linkspicked', this.onLinksPicked, this);
             }
 
-            var newUrl = this.getApiEndPoint('organisationUsers').replace(this.getApiMapParentIdentifier(), org.get('uuid'));
-            if(newUrl != this.lastDataUrl){
-                this.lastDataUrl = newUrl;
+            this.userLinksPicker.show();
+        },
 
-                this.getViewModel().get('gridstore').getProxy().setUrl(newUrl);
-                this.reloadGrid();
-            }
+        /**
+         * linkspicked callback
+         * @param records
+         */
+        onLinksPicked: function(records){
+
         }
+
+
 
     });
 

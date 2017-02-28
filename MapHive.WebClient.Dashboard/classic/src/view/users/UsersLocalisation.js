@@ -8,30 +8,22 @@
 
         requires: [
             'mh.localisation.Localisation',
-            'mh.module.dataView.DataViewBaseLocalisation'
+            'mh.module.dataView.users.UsersLocalisation'
         ],
         statics: {
-            inherits: 'mh.module.dataView.DataViewBaseLocalisation',
+            inherits: 'mh.module.dataView.users.UsersLocalisation',
             localisation: {
-                gridTitle: {
-                    en: 'Users',
-                    pl: 'Użytkownicy'
+                btnAddUser: {
+                    en: 'Add user',
+                    pl: 'Dodaj użytkownika'
                 },
-                forename: {
-                    en: 'Forename',
-                    pl: 'Imię'
+                btnAddNewOrgUser: {
+                    en: 'Add new user',
+                    pl: 'Dodaj nowego użytkownika'
                 },
-                surname: {
-                    en: 'Surname',
-                    pl: 'Nazwisko'
-                },
-                email: {
-                    en: 'Email',
-                    pl: 'Email'
-                },
-                bio: {
-                    en: 'Bio',
-                    pl: 'Bio'
+                btnAddUserFromCatalogue: {
+                    en: 'Search for user',
+                    pl: 'Wyszukaj użytkownika'
                 }
             }
         }

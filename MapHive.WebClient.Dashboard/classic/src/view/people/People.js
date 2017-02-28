@@ -12,11 +12,13 @@
 
     requires: [
         'Dashboard.view.people.PeopleController',
+        'Dashboard.view.people.PeopleLocalisation',
         'Dashboard.view.people.PeopleModel',
         'Dashboard.view.teams.Teams',
         'Dashboard.view.users.Users',
         'Ext.layout.container.Fit',
-        'Ext.panel.Panel'
+        'Ext.panel.Panel',
+        'mh.localisation.Localisation'
     ],
 
     controller: 'people',
@@ -27,33 +29,21 @@
         header: false,
 
         items: [
-            // {
-            //     xtype: 'panel',
-            //     reference: 'users',
-            //     bind: {
-            //         title: '{localisation.users}'
-            //     },
-            //     iconCls: 'x-li li-users2',
-            //     layout: 'fit',
-            //     items: [
-            //         {
-            //             xtype: 'users'
-            //         }
-            //     ]
-            // },
             {
                 xtype: 'users',
                 reference: 'users',
-                title: 'whooaaaa',
-                iconCls: 'x-li li-users2'
+                iconCls: 'x-li li-users2',
+
+                //container does not bind title, and title is needed for the tab, hence a little hack...
+                title: mh.localisation.Localisation.getTranslation('users', 'Dashboard.view.people.PeopleLocalisation')
             },
             {
                 xtype: 'teams',
                 reference: 'teams',
-                bind: {
-                    title: '{localisation.teams}'
-                },
-                iconCls: 'x-li li-group-work'
+                iconCls: 'x-li li-group-work',
+
+                //container does not bind title, and title is needed for the tab, hence a little hack...
+                title: mh.localisation.Localisation.getTranslation('teams', 'Dashboard.view.people.PeopleLocalisation')
             }
         ]
     });

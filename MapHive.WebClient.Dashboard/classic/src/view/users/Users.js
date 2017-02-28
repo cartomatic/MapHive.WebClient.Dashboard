@@ -5,12 +5,11 @@
     'use strict';
 
     Ext.define('Dashboard.view.users.Users', {
-        extend: 'mh.module.dataView.DataViewBase',
+        extend: 'mh.module.dataView.users.Users',
 
         requires: [
             'Ext.grid.Panel',
             'Ext.grid.filters.Filters',
-            'Dashboard.view.users.DataViewForm',
             'Dashboard.view.users.UsersController',
             'Dashboard.view.users.UsersModel'
         ],
@@ -25,29 +24,7 @@
 
         hideGridHeader: true,
         hideFormHeader: true,
-        autoLoad: false,
-
-        grid: {
-            xtype: 'grid',
-            border: false,
-            plugins: 'gridfilters',
-            bind: {store: '{gridstore}'},
-            columns: [
-                {
-                    bind: {text: '{localisation.email}'},
-                    dataIndex: 'email',
-                    flex: 1,
-                    filter: {
-                        // required configs
-                        type: 'string'
-                    }
-                }
-            ]
-        },
-        gridIconCls: 'x-li li-users2',
-        form: 'Dashboard.view.users.DataViewForm',
-        //formWidth: 300,
-        editForm: false
+        autoLoad: false
     });
 
 }());

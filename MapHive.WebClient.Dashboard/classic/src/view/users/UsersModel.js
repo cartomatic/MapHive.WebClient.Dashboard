@@ -5,7 +5,7 @@
     'use strict';
 
     Ext.define('Dashboard.view.users.UsersModel', {
-        extend: 'mh.module.dataView.DataViewBaseModel',
+        extend: 'mh.module.dataView.users.UsersModel',
         alias: 'viewmodel.users',
 
     requires: [

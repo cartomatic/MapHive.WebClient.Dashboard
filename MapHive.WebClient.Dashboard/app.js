@@ -9,7 +9,6 @@ Ext.application({
     extend: 'Dashboard.Application',
 
     requires: [
-        'Dashboard.view.main.Main'
     ]
 
     //Do not create a view yet. Let the app decide how to handle it

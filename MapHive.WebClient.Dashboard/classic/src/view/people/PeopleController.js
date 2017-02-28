@@ -70,8 +70,6 @@
 
             if(view){
                 this.getView().getLayout().setActiveItem(view);
-                //make the view reload its grid
-
             }
             else {
                 //okey dokey, this is an unmatched route after all, so redirect to a default route
