@@ -31,13 +31,37 @@
             this.createAddUserUi();
 
             this.setUpOrgContextHandlers();
+
+            this.customiseDataViewForm();
+
+            this.lookupReference('grid').on('selectionchange', this.onGridSelectionChanged, this);
+        },
+
+        /**
+         * customises the dataview behavior on grid selection change; hides some fields to make more sensible presentation
+         * @param grid
+         * @param selected
+         * @param eOpts
+         */
+        onGridSelectionChanged: function(grid, selected, eOpts){
+            var visibleInCatalogue = this.lookupReference('visibleInCatalogue');
+            visibleInCatalogue.setVisible(selected && selected.length === 1 && this.isOwnUser(selected[0]));
+        },
+
+        /**
+         * whether or not user is an own org user
+         * @param rec
+         * @returns {boolean}
+         */
+        isOwnUser: function(rec){
+            return rec.get('isOrgUser') && rec.get('parentOrganisationId') === this.getCurrentOrgId();
         },
 
         /**
          * creates UI for adding users to an organisation
          */
         createAddUserUi: function(){
-            this.lookupReference('gridTbar').add(
+            this.lookupReference('gridTbar').insert(3,
                 Ext.create('Ext.button.Split', {
                     text: this.getTranslation('btnAddUser'),
                     iconCls: 'x-li li-user-plus',
@@ -68,6 +92,7 @@
                     }
                 })
             );
+            this.lookupReference('gridTbar').insert(4,'-');
         },
 
         /**
@@ -75,9 +100,8 @@
          * @param btn
          */
         onAddNewOrgUser: function(btn){
-            //just a new user, so a simple user details input should do
-
-
+            //new org user - redirect to the standard editor!
+            this.onBtnCreateClick(btn);
         },
 
         /**
@@ -155,9 +179,112 @@
          */
         onLinkUserFailure: function(){
             this.fireGlobal('loadmask::hide');
+        },
+
+        viewFormFieldsToHide: ['slug', 'isAccountClosed', 'isAccountVerified', 'gravatarEmail', 'isOrgUser'],
+
+        /**
+         * customises the appearance of the data view form
+         */
+        customiseDataViewForm: function(){
+            Ext.Array.each(this.viewFormFieldsToHide, function(ref){
+                this.lookupReference(ref).hide();
+            }, this);
+
+            //also initially hide visibleInCatalogue; this will be shown depending on data
+            this.lookupReference('visibleInCatalogue').hide();
+        },
+
+        /**
+         * @private
+         * whether or not the editor has already been customised
+         */
+        editorCustomised: false,
+
+        /**
+         * customises and returns the editor module;
+         * customisation pretty much removes the fields that should not be shown
+         * @param btn
+         */
+        getEditor: function(btn){
+            var editor = this.callMeParent('getEditor', arguments);
+
+            if(!this.editorCustomised){
+                Ext.Array.each(this.viewFormFieldsToHide, function(ref){
+                    editor.getForm().lookupReference(ref).hide();
+                }, this);
+                this.editorCustomised = true;
+            }
+
+            return editor;
+        },
+
+        /**
+         * customises the user create - adjusts the api url
+         * @param btn
+         */
+        onBtnCreateClick: function(btn) {
+
+            //call the base
+            this.callMeParent('onBtnCreateClick', arguments);
+
+            //and make sure to customise the rec content but also the editor itself!
+            var editor = this.getEditor();
+
+            editor.getRecord().set('company', this.getCurrentOrgNameOrSlug());
+            editor.getForm().setCustomUrl(
+                this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
+            );
+        },
+
+        /**
+         * btn edit behavior customisation; org users will be editable the usual way; it will only be possible to change role for a foreign users
+         * @param btn
+         */
+        onBtnEditClick: function(btn){
+            //need to verify the rec first to check if a user is an org user
+            var recs = this.lookupReference('grid').getSelection() || [],
+                rec;
+
+            if(recs.length === 1){
+                rec = recs[0];
+
+                if(this.isOwnUser(rec)){
+                    //own user, so just use the default
+                    this.callMeParent('onBtnEditClick', arguments);
+
+                    //and make sure to customise the rec content but also the editor itself!
+                    var editor = this.getEditor();
+
+                    editor.getRecord().set('company', this.getCurrentOrgNameOrSlug());
+                    editor.getForm().setCustomUrl(
+                        this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
+                    );
+                }
+                else {
+                    alert('TODO - not own user, so will just allow role edit.');
+                }
+            }
+        },
+
+        /**
+         * customises the behavior of delete so can handle both - own and external users
+         * @param btn
+         */
+        onBtnDeleteClick: function(btn){
+            var recs = this.lookupReference('grid').getSelection() || [],
+                rec;
+
+            if(recs.length === 1){
+                if(this.isOwnUser(rec)){
+                    //own user, so just use the default
+                    this.callMeParent('onBtnEditClick', arguments);
+                }
+                else {
+                    alert('TODO - not own user, so will just unlink from org.');
+                }
+            }
         }
-
-
     });
 
 }());

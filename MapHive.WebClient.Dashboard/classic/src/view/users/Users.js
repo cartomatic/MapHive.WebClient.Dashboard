@@ -24,7 +24,10 @@
 
         hideGridHeader: true,
         hideFormHeader: true,
-        autoLoad: false
+        autoLoad: false,
+
+        //hide the default create tools
+        preventCreate: true
     });
 
 }());
