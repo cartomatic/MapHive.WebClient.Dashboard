@@ -11,7 +11,8 @@
     requires: [
         'Dashboard.view.users.UsersLocalisation',
         'Ext.button.Split',
-        'mh.module.dataView.LinksPicker'
+        'mh.module.dataView.LinksPicker',
+        'mh.module.loadMask.LoadMask'
     ],
 
     mixins: [
@@ -75,6 +76,8 @@
          */
         onAddNewOrgUser: function(btn){
             //just a new user, so a simple user details input should do
+
+
         },
 
         /**
@@ -83,21 +86,31 @@
         userLinksPicker: null,
 
         /**
-         * initiates adding a user from a catalogue
-         * @param btn
+         * gets an instance of a user links picker
+         * @returns {mh.module.dataView.LinksPicker}
          */
-        onAddUserFromCatalogue: function(btn){
+        getUserLinksPicker: function(btn){
             //need to display a window with a standard users links picker.
             if(!this.userLinksPicker){
-                this.userLinksPicker = Ext.create('mh.module.dataView.users.Catalogue', {
-                    animateTarget: btn
-                });
+                this.userLinksPicker = Ext.create('mh.module.dataView.users.Catalogue', {});
 
                 //need to get the data, huh?
                 this.userLinksPicker.on('linkspicked', this.onLinksPicked, this);
             }
 
-            this.userLinksPicker.show();
+            if(btn){
+                this.userLinksPicker.animateTarget = btn;
+            }
+
+            return this.userLinksPicker;
+        },
+
+        /**
+         * initiates adding a user from a catalogue
+         * @param btn
+         */
+        onAddUserFromCatalogue: function(btn){
+            this.getUserLinksPicker(btn).show();
         },
 
         /**
@@ -105,9 +118,44 @@
          * @param records
          */
         onLinksPicked: function(records){
+            this.getUserLinksPicker().hide();
+            this.fireGlobal('loadmask::show', this.getTranslation('linkUserMask'));
 
+            //note: there should be only one rec for a starter.
+
+            var cfg = {
+                    url: this.getApiEndPoint('organisationUsersLink').replace(this.getParentIdentifier(), this.getCurrentOrgId()),
+                    params: records[0].getData(),
+                    success: this.onLinkUserSuccess,
+                    failure: this.onLinkUserFailure,
+                    scope: this,
+                    exceptionMsg: this.getTranslation('linkUserFailure')
+                },
+                me = this,
+                fn = function(){
+                    me.doPost(cfg);
+                };
+
+            cfg.retry = fn;
+
+            fn();
+        },
+
+        /**
+         * user linked successfully
+         * @param response
+         */
+        onLinkUserSuccess: function(response){
+            this.fireGlobal('loadmask::hide');
+            this.reloadGrid();
+        },
+
+        /**
+         * handles user failed link
+         */
+        onLinkUserFailure: function(){
+            this.fireGlobal('loadmask::hide');
         }
-
 
 
     });

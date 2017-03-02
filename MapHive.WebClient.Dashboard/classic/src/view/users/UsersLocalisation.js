@@ -24,6 +24,22 @@
                 btnAddUserFromCatalogue: {
                     en: 'Search for user',
                     pl: 'Wyszukaj użytkownika'
+                },
+                addUserMask: {
+                    en: 'Adding a user...',
+                    pl: 'Dodawanie użytkownika...'
+                },
+                addUserFailure: {
+                    en: 'Failed to add a user.',
+                    pl: 'Dodanie użytkownika nie powiodło się.'
+                },
+                linkUserMask: {
+                    en: 'Linking a user...',
+                    pl: 'Dodawanie użytkownika...'
+                },
+                linkUserFailure: {
+                    en: 'Failed to link a user.',
+                    pl: 'Dodanie użytkownika nie powiodło się.'
                 }
             }
         }
