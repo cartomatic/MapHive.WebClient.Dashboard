@@ -17,7 +17,7 @@
     mixins: [
             'mh.mixin.Localisation',
             'mh.mixin.CallMeParent',
-            'Dashboard.mixin.DataViewOrgCtxUtils'
+            'mh.mixin.DataViewOrgCtxUtils'
         ],
 
         /**
