@@ -25,6 +25,9 @@
          * Called when the view is created
          */
         init: function() {
+            //inject some customisations prior to creating stuff!
+            this.injectCustomColumns();
+
             this.callMeParent('init', arguments);
 
             //inject extra user add tools
@@ -193,6 +196,8 @@
 
             //also initially hide visibleInCatalogue; this will be shown depending on data
             this.lookupReference('visibleInCatalogue').hide();
+
+            this.lookupReference('organisationRole').show();
         },
 
         /**
@@ -207,12 +212,18 @@
          * @param btn
          */
         getEditor: function(btn){
-            var editor = this.callMeParent('getEditor', arguments);
+            var editor = this.callMeParent('getEditor', arguments),
+                orgRole = editor.getForm().lookupReference('organisationRole');
 
             if(!this.editorCustomised){
                 Ext.Array.each(this.viewFormFieldsToHide, function(ref){
                     editor.getForm().lookupReference(ref).hide();
                 }, this);
+
+                //show org role, as we're working in the role context
+                orgRole.show();
+                orgRole.setReadOnly(false);
+
                 this.editorCustomised = true;
             }
 
@@ -276,13 +287,89 @@
                 rec;
 
             if(recs.length === 1){
+                rec = recs[0];
                 if(this.isOwnUser(rec)){
                     //own user, so just use the default
-                    this.callMeParent('onBtnEditClick', arguments);
+                    this.callMeParent('onBtnDeleteClick', arguments);
                 }
                 else {
                     alert('TODO - not own user, so will just unlink from org.');
                 }
+            }
+        },
+
+        injectCustomColumns: function(){
+            var grid = this.getView().getGrid(),
+                cols = grid.columns.items;
+            cols.push({
+                width: 35,
+                renderer: 'externalUserRenderer'
+            });
+            cols.push({
+                width: 35,
+                renderer: 'orgRoleRenderer'
+            });
+        },
+
+        /**
+         * renderer of the external user info
+         * @param value
+         * @param metadata
+         * @param rec
+         * @param rowIdx
+         * @param colIdx
+         * @param store
+         * @param view
+         */
+        externalUserRenderer: function(value, metadata, rec, rowIdx, colIdx, store, view){
+            var isOwn = this.isOwnUser(rec);
+            return '<div class="x-i54 ' +
+                (isOwn ? 'i54-home' : 'i54-global') + '"' +
+                'data-qtip="'+ this.getTranslation(isOwn ? 'orgUser' : 'externalUser') +'"></div>';
+        },
+
+        /**
+         * renders user role within an organisation
+         * @param value
+         * @param metadata
+         * @param rec
+         * @param rowIdx
+         * @param colIdx
+         * @param store
+         * @param view
+         * @returns {string}
+         */
+        orgRoleRenderer: function(value, metadata, rec, rowIdx, colIdx, store, view){
+            this.prepareOrgRoles();
+
+            var orgRole = rec.get('organisationRole'),
+                tip = this.orgRoles[orgRole],
+                icon;
+            switch(orgRole){
+                case 0: //owner
+                    icon = 'x-i54c i54c-master-yoda';
+                    break;
+
+                case 1: //admin
+                    icon = 'x-i54c i54c-geek-1';
+                    break;
+
+                case 2: //member
+                    icon = 'x-i54c i54c-male-2';
+                    break;
+            }
+            return '<div class="' + icon + '" data-qtip="' + tip + '"></div>';
+        },
+
+        /**
+         * prepares org roles map for the renderer
+         */
+        prepareOrgRoles: function(){
+            if(!this.orgRoles){
+                this.orgRoles = {};
+                Ext.Array.each(mh.data.dictionaries.OrganisationRoles.getOrgRolesStore().data, function(r){
+                    this.orgRoles[r.id] = r.name;
+                }, this);
             }
         }
     });
