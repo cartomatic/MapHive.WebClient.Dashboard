@@ -12,6 +12,7 @@
         'Dashboard.view.users.UsersLocalisation',
         'Ext.button.Split',
         'mh.module.dataView.LinksPicker',
+        'mh.module.dataView.users.Catalogue',
         'mh.module.loadMask.LoadMask'
     ],
 
@@ -230,6 +231,50 @@
             return editor;
         },
 
+
+        /**
+         * editor used to edit external users - so only org roles!
+         */
+        externalUserEditor: null,
+
+        /**
+         * creates a custom editor for the external user role edits
+         * @param btn
+         * @returns {*}
+         */
+        getExternalUserEditor: function(btn){
+
+            if(!this.externalUserEditor){
+                //ok... need to do some cheating here in order to avoid customising too much...
+                //basically want to create the very same editor as 'normally' and then customise it further.
+                //because once created, an editor gets cached, it is necessary to cache it locally, wipe out and then restore.
+                //this way will get an independent editor
+
+                var currentEditor = this.editor;
+                this.editor = null;
+
+                //create new instance
+                var editor = this.callMeParent('getEditor', arguments),
+                    form = editor.getForm(),
+                    orgRole = form.lookupReference('organisationRole');
+
+                //restore cache
+                this.editor = currentEditor;
+
+                //customise editor
+                Ext.Array.each(orgRole.up('panel').items.items, function(item){
+                    item.hide();
+                });
+
+                //show org role, as we're working in the role context
+                orgRole.show();
+                orgRole.setReadOnly(false);
+
+                this.externalUserEditor = editor;
+            }
+            return this.externalUserEditor;
+        },
+
         /**
          * customises the user create - adjusts the api url
          * @param btn
@@ -255,7 +300,8 @@
         onBtnEditClick: function(btn){
             //need to verify the rec first to check if a user is an org user
             var recs = this.lookupReference('grid').getSelection() || [],
-                rec;
+                rec,
+                editor;
 
             if(recs.length === 1){
                 rec = recs[0];
@@ -265,15 +311,20 @@
                     this.callMeParent('onBtnEditClick', arguments);
 
                     //and make sure to customise the rec content but also the editor itself!
-                    var editor = this.getEditor();
+                    editor = this.getEditor();
 
-                    editor.getRecord().set('company', this.getCurrentOrgNameOrSlug());
                     editor.getForm().setCustomUrl(
                         this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
                     );
                 }
                 else {
-                    alert('TODO - not own user, so will just allow role edit.');
+                    //get a custom editor with the role field only!
+                    editor = this.getExternalUserEditor();
+                    editor.getForm().setCustomUrl(
+                        this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
+                    );
+                    editor.setRecord(rec);
+                    editor.show();
                 }
             }
         },
