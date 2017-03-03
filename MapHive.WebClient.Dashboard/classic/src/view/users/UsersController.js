@@ -335,7 +335,8 @@
          */
         onBtnDeleteClick: function(btn){
             var recs = this.lookupReference('grid').getSelection() || [],
-                rec;
+                rec,
+                me = this;
 
             if(recs.length === 1){
                 rec = recs[0];
@@ -344,11 +345,74 @@
                     this.callMeParent('onBtnDeleteClick', arguments);
                 }
                 else {
-                    alert('TODO - not own user, so will just unlink from org.');
+                    //just ask a user to confirm an external user will be removed from an org.
+                    //prompt user if he is sure to delete a record
+                    Ext.Msg.show({
+                        title: this.getTranslation('unlinkExternalUserTitle'),
+                        message: this.getTranslation('unlinkExternalUserMsg'),
+                        width: 300,
+                        buttons: Ext.Msg.OKCANCEL,
+                        amimateTarget: btn,
+                        icon: Ext.Msg.WARNING,
+                        fn: function(msgBtn){
+                            if(msgBtn === 'ok'){
+                                me.unlinkUser(rec);
+                            }
+                        }
+                    });
                 }
             }
         },
 
+        /**
+         * unlinks a user from an organisation
+         * @param user
+         */
+        unlinkUser: function(user){
+            this.fireGlobal('loadmask::show', this.getTranslation('unlinkUserMask'));
+
+            //note: there should be only one rec for a starter.
+
+            var me = this,
+                cfg = {
+                    scope: me,
+                    success: me.onUnLinkUserSuccess,
+                    failure: me.onUnLinkUserFailure,
+                    exceptionMsg: me.getTranslation('unlinkUserFailure')
+                },
+                callback = me.generateModelRequestCallback(cfg),
+
+                op = function(){
+                    user.erase({
+                        callback: callback,
+                        url: me.getApiEndPoint('organisationUsersLink').replace(me.getParentIdentifier(), me.getCurrentOrgId()),
+                    });
+                };
+
+            cfg.retry = op;
+
+            op();
+        },
+
+        /**
+         * unlink ext user success handler
+         */
+        onUnLinkUserSuccess: function(){
+            this.fireGlobal('loadmask::hide');
+            this.reloadGrid();
+        },
+
+        /**
+         * unlink ext user failure handler
+         */
+        onUnLinkUserFailure: function(){
+            this.fireGlobal('loadmask::hide');
+            this.reloadGrid();
+        },
+
+        /**
+         * injects custom cols into the base grid
+         */
         injectCustomColumns: function(){
             var grid = this.getView().getGrid(),
                 cols = grid.columns.items;
