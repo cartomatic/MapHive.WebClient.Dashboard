@@ -49,7 +49,9 @@
          */
         onGridSelectionChanged: function(grid, selected, eOpts){
             var visibleInCatalogue = this.lookupReference('visibleInCatalogue');
-            visibleInCatalogue.setVisible(selected && selected.length === 1 && this.isOwnUser(selected[0]));
+            if(visibleInCatalogue) {
+                visibleInCatalogue.setVisible(selected && selected.length === 1 && this.isOwnUser(selected[0]));
+            }
         },
 
         /**
@@ -152,7 +154,7 @@
             //note: there should be only one rec for a starter.
 
             var cfg = {
-                    url: this.getApiEndPoint('organisationUsersLink').replace(this.getParentIdentifier(), this.getCurrentOrgId()),
+                    url: this.getApiEndPoint('organisationUsersLink').replace(this.getApiMapOrgIdentifier(), this.getCurrentOrgId()),
                     params: records[0].getData(),
                     success: this.onLinkUserSuccess,
                     failure: this.onLinkUserFailure,
@@ -191,14 +193,17 @@
          * customises the appearance of the data view form
          */
         customiseDataViewForm: function(){
-            Ext.Array.each(this.viewFormFieldsToHide, function(ref){
-                this.lookupReference(ref).hide();
-            }, this);
+            if(this.getView().getForm() !== false) {
 
-            //also initially hide visibleInCatalogue; this will be shown depending on data
-            this.lookupReference('visibleInCatalogue').hide();
+                Ext.Array.each(this.viewFormFieldsToHide, function (ref) {
+                    this.lookupReference(ref).hide();
+                }, this);
 
-            this.lookupReference('organisationRole').show();
+                //also initially hide visibleInCatalogue; this will be shown depending on data
+                this.lookupReference('visibleInCatalogue').hide();
+
+                this.lookupReference('organisationRole').show();
+            }
         },
 
         /**
@@ -316,7 +321,7 @@
                     //get a custom editor with the role field only!
                     editor = this.getExternalUserEditor();
                     editor.getForm().setCustomUrl(
-                        this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
+                        this.getApiEndPoint('organisationUsers').replace(this.getApiMapOrgIdentifier(), this.getCurrentOrgId())
                     );
                     editor.setRecord(rec);
                     editor.show();
@@ -380,7 +385,7 @@
                 op = function(){
                     user.erase({
                         callback: callback,
-                        url: me.getApiEndPoint('organisationUsersLink').replace(me.getParentIdentifier(), me.getCurrentOrgId())
+                        url: me.getApiEndPoint('organisationUsersLink').replace(me.getApiMapOrgIdentifier(), me.getCurrentOrgId())
                     });
                 };
 

@@ -27,6 +27,20 @@
             //enable input fields - this view inherits from a display only view
             this.lookupReference('name').setReadOnly(false);
             this.lookupReference('description').setReadOnly(false);
+
+            this.lookupReference('links_users').setEditable();
+        },
+
+        /**
+         * makes sure the links are collected prior to saving!
+         */
+        save: function () {
+            this.addLinksDiff(
+                this.lookupReference('links_users').getChanges()
+            );
+
+            //finally save
+            this.callMeParent('save', arguments);
         }
     });
 

@@ -26,6 +26,15 @@
             this.callMeParent('init', arguments);
 
             this.setUpOrgContextHandlers('organisationTeams');
+        },
+
+        /**
+         * sets up links grid for the new org ctx;
+         * an override of a method template provided via mh.mixin.DataViewOrgCtxUtils;
+         * provides hook for custom org ctx change handling
+         */
+        orgCtxChanged: function(org){
+            this.lookupReference('links_users').setOrgContext(org);
         }
     });
 

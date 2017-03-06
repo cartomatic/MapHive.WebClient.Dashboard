@@ -24,6 +24,22 @@
                 description: {
                     en: 'Description',
                     pl: 'Opis'
+                },
+                teamUsers: {
+                    en: 'Users',
+                    pl: 'Użytkownicy'
+                },
+                email: {
+                    en: 'Email',
+                    pl: 'Email'
+                },
+                forename: {
+                    en: 'Forename',
+                    pl: 'Imię'
+                },
+                surname: {
+                    en: 'Surname',
+                    pl: 'Nazwisko'
                 }
             }
         }
