@@ -34,7 +34,7 @@
             //inject extra user add tools
             this.createAddUserUi();
 
-            this.setUpOrgContextHandlers();
+            this.setUpOrgContextHandlers('organisationUsers');
 
             this.customiseDataViewForm();
 
@@ -272,6 +272,9 @@
 
                 this.externalUserEditor = editor;
             }
+
+
+
             return this.externalUserEditor;
         },
 
@@ -288,9 +291,7 @@
             var editor = this.getEditor();
 
             editor.getRecord().set('company', this.getCurrentOrgNameOrSlug());
-            editor.getForm().setCustomUrl(
-                this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
-            );
+            //note: dynamic url set by the org ctx utils
         },
 
         /**
@@ -309,13 +310,7 @@
                 if(this.isOwnUser(rec)){
                     //own user, so just use the default
                     this.callMeParent('onBtnEditClick', arguments);
-
-                    //and make sure to customise the rec content but also the editor itself!
-                    editor = this.getEditor();
-
-                    editor.getForm().setCustomUrl(
-                        this.getApiEndPoint('organisationUsers').replace(this.getParentIdentifier(), this.getCurrentOrgId())
-                    );
+                    //note: dynamic url set by the org ctx utils
                 }
                 else {
                     //get a custom editor with the role field only!
@@ -385,7 +380,7 @@
                 op = function(){
                     user.erase({
                         callback: callback,
-                        url: me.getApiEndPoint('organisationUsersLink').replace(me.getParentIdentifier(), me.getCurrentOrgId()),
+                        url: me.getApiEndPoint('organisationUsersLink').replace(me.getParentIdentifier(), me.getCurrentOrgId())
                     });
                 };
 
