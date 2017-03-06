@@ -29,13 +29,17 @@
         },
 
         /**
-         * sets up links grid for the new org ctx;
+         * sets up links grid for the new org ctx; does it for both - links grids in the view form and edit form
          * an override of a method template provided via mh.mixin.DataViewOrgCtxUtils;
          * provides hook for custom org ctx change handling
          */
         orgCtxChanged: function(org){
             this.lookupReference('links_users').setOrgContext(org);
+
+            var editor = this.getEditor();
+            editor.getForm().lookupReference('links_users').setOrgContext(org);
         }
+
     });
 
 }());
