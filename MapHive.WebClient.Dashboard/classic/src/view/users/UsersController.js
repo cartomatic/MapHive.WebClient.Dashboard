@@ -11,6 +11,7 @@
     requires: [
         'Dashboard.view.users.UsersLocalisation',
         'Ext.button.Split',
+        'mh.data.dictionaries.OrganisationRoles',
         'mh.module.dataView.LinksPicker',
         'mh.module.dataView.users.Catalogue',
         'mh.module.loadMask.LoadMask'

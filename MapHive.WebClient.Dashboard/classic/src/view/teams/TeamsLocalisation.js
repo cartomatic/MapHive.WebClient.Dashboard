@@ -40,6 +40,14 @@
                 surname: {
                     en: 'Surname',
                     pl: 'Nazwisko'
+                },
+                teamApps: {
+                    en: 'Applications',
+                    pl: 'Aplikacje'
+                },
+                isAppAdmin: {
+                    en: 'Admin',
+                    pl: 'Admin'
                 }
             }
         }

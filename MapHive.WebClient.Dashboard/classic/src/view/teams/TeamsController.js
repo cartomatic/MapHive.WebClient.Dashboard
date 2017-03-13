@@ -35,9 +35,11 @@
          */
         orgCtxChanged: function(org){
             this.lookupReference('links_users').setOrgContext(org);
+            this.lookupReference('links_apps').setOrgContext(org);
 
             var editor = this.getEditor();
             editor.getForm().lookupReference('links_users').setOrgContext(org);
+            editor.getForm().lookupReference('links_apps').setOrgContext(org);
         }
 
     });

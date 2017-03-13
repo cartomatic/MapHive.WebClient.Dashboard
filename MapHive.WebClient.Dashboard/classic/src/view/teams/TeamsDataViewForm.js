@@ -10,11 +10,14 @@
         xtype: 'teams-data-view-form',
 
     requires: [
+        'Dashboard.view.applications.Applications',
         'Ext.form.field.Checkbox',
         'Ext.form.field.Text',
+        'Ext.grid.column.Widget',
         'Ext.layout.container.Form',
         'Ext.layout.container.VBox',
         'Ext.tab.Panel',
+        'mh.data.model.Application',
         'mh.data.model.User',
         'mh.mixin.ApiMap',
         'mh.module.dataView.LinksGrid'
@@ -95,6 +98,51 @@
                                 bind: {text: '{localisation.surname}'},
                                 dataIndex: 'surname',
                                 flex: 1
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'mh-links-grid',
+                        reference: 'links_apps',
+                        iconCls: 'x-i54 i54-multy-task-2',
+                        ddGroup: 'team-apps',
+                        flex: 1,
+                        bind: {
+                            context: '{rec}',
+                            title: '{localisation.teamApps}'
+                        },
+                        model: 'mh.data.model.Application',
+                        apiUrl: mh.mixin.ApiMap.getApiEndPoint('teamApps'),
+
+                        //this will defer the links picker refresh, so there is enough time to adjust the url appropriately
+                        deferLinksPickerRefresh: true,
+
+                        //this could be a class name too. but configuring it manually here
+                        dataView: {
+                            //xtype causes sencha plugin in webstorm add to requires arr, and then loader encounters circular ref...
+                            type: 'applications',
+                            form: false,
+                            hideGridHeader: true, //hide grid header
+                            autoLoad: false, //so can reload this when decided
+
+                            //because this is a view withing a links grid,
+                            avoidAutoReloadOnOrgContextChange: true
+                        },
+                        columns: [
+                            {
+                                bind: {text: '{localisation.name}'},
+                                dataIndex: 'name',
+                                flex: 1
+                            },
+                            {
+                                xtype: 'widgetcolumn',
+                                widget: {
+                                    xtype: 'checkbox',
+                                    readOnly: true
+                                },
+                                bind: {text: '{localisation.isAppAdmin}'},
+                                dataIndex: 'isAppAdmin',
+                                width: 60
                             }
                         ]
                     }
