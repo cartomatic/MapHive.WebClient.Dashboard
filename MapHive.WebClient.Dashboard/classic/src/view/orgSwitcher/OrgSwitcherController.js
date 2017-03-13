@@ -46,9 +46,10 @@
             vm.set('currentOrg', orgCtx.currentOrg);
             vm.set('userOrgs', orgCtx.userOrgs);
 
-            console.clear();
+            //<debug>
             console.warn('orgCtx.currentOrg', orgCtx.currentOrg);
-            console.warn('orgCtx.userOrgs', orgCtx.userOrgs)
+            console.warn('orgCtx.userOrgs', orgCtx.userOrgs);
+            //</debug>
 
             this.updateOrgMenu();
 
