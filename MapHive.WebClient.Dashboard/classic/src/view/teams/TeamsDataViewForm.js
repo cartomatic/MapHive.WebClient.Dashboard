@@ -136,12 +136,13 @@
                             },
                             {
                                 xtype: 'widgetcolumn',
+                                reference: 'isAppAdmin',
                                 widget: {
                                     xtype: 'checkbox',
-                                    readOnly: true
+                                    readOnly: true,
+                                    bind: '{record.linkData.app_access_credentials.app_admin_access}' //property names defined in MapHive.Server.Core.DataModel.Team
                                 },
                                 bind: {text: '{localisation.isAppAdmin}'},
-                                dataIndex: 'isAppAdmin',
                                 width: 60
                             }
                         ]
