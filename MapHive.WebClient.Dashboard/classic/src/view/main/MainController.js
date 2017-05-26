@@ -35,6 +35,7 @@
             this.lookupReference('sidePanel').insert(0,{
                 xtype: 'orgswitcher'
             });
+
         },
 
         /**

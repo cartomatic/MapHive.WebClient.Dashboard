@@ -9,8 +9,15 @@
         extend: 'Ext.app.ViewController',
         alias: 'controller.orgswitcher',
 
-        mixins: [
-            'mh.communication.MsgBus'
+    requires: [
+        'Dashboard.view.orgSwitcher.OrgSwitcherLocalisation',
+        'Ext.menu.Separator'
+    ],
+
+    mixins: [
+            'mh.communication.MsgBus',
+            'mh.mixin.UserCfg',
+            'mh.mixin.Localisation'
         ],
 
         /**
@@ -63,6 +70,8 @@
             this.getViewModel().set('currentOrg', org);
             this.updateOrgMenu();
 
+
+
             this.getView().enable();
         },
 
@@ -99,6 +108,23 @@
                 });
             });
 
+            //finally, if user is allowed to create orgs, add a 'add org' btn
+            var user = this.getCurrentUser();
+            if(user.isOrgUser !== true){
+                menu.add([
+                    {
+                        xtype: 'menuseparator'
+                    },
+                    {
+                        text: this.getTranslation('btnAddOrg'),
+                        iconCls: 'x-i54 i54-global',
+                        listeners: {
+                            click: 'onBtnAddNewOrgClick'
+                        }
+                    }
+                ]);
+            }
+
             menu.setWidth(btn.getWidth());
         },
 
@@ -134,6 +160,13 @@
             if(btn.getMenu().items.items.length > 0){
                 btn.showMenu();
             }
+        },
+
+        /**
+         * initiates a procedure of adding a new organisation with the current user being its owner
+         */
+        onBtnAddNewOrgClick: function(){
+            alert('will add a new org for a user');
         }
 
     });
